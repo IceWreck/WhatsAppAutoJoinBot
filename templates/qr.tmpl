@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>QR Code</title>
+
+    <meta charset="utf-8" />
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://unpkg.com/marx-css/css/marx.min.css" />
+  </head>
+
+  <body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+
+    <main>
+      <h1>Scan this ASAP !</h1>
+      <hr />
+      <p>If it doesn't work then go to <a href="/login">/login</a> again.</p>
+      <p> Scanning Required: {{ .NeedQR }} </p>
+      <p>
+        QR String:
+        <b
+          ><code>{{.QRString}}</code></b
+        >
+      </p>
+  
+      <canvas id="qr"></canvas>
+    </main>
+    <script>
+      const qrstr = "{{.QRString}}";
+
+      (function () {
+        var qr = new QRious({
+          element: document.getElementById("qr"),
+          value: qrstr,
+          size: 500,
+        });
+      })();
+    </script>
+  </body>
+</html>
