@@ -16,9 +16,15 @@ var wacon *whatsapp.Conn
 func main() {
 
 	setup := func() {
-		wac, err := whatsapp.NewConn(5 * time.Second)
+		wac, err := whatsapp.NewConnWithOptions(&whatsapp.Options{
+			// timeout
+			Timeout: 20 * time.Second,
+			// set custom client name
+			ShortClientName: "WhatsApp AutoJoin",
+			LongClientName:  "WhatsApp AutoJoin",
+		})
 		if err != nil {
-			NewLog("Cant create connection", err)
+			newLog("Cant create connection", err)
 			panic(err)
 		}
 
@@ -46,8 +52,13 @@ func main() {
 			case t := <-ticker.C:
 				fmt.Println("Login Check tick at", t)
 				if !wacon.GetLoggedIn() {
-					NewLog("Logged Out, retry login")
+					newLog("Logged Out, retry login")
 					setup()
+					// timer to check if relogin worked
+					time.Sleep(2 * time.Minute)
+					if !wacon.GetLoggedIn() {
+						// send a notification about logout
+					}
 				}
 			}
 		}
@@ -77,13 +88,13 @@ func main() {
 			QRString string
 			NeedQR   bool
 		}{
-			GetState("qr"),
+			getState("qr"),
 			func() bool {
 				needed := false
 				if time.Since(lastUpdated) < time.Second*20 {
 					needed = true
 				}
-				if len(GetState("qr")) == 0 {
+				if len(getState("qr")) == 0 {
 					needed = false
 				}
 				return needed
@@ -96,7 +107,7 @@ func main() {
 		if err != nil {
 			w.Write([]byte("Done"))
 		} else {
-			NewLog("error during logout", err)
+			newLog("error during logout", err)
 			w.Write([]byte("Error"))
 		}
 	})
@@ -107,7 +118,7 @@ func main() {
 		ts.Execute(w, struct {
 			Logs []string
 		}{
-			GetLogs(),
+			getLogs(),
 		})
 
 	})

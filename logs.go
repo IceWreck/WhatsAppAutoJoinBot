@@ -2,21 +2,21 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"sync"
+	"time"
 )
 
 var logsQueue = []string{}
 var logsMutex sync.Mutex
 
-func GetLogs() []string {
+func getLogs() []string {
 	return logsQueue
 }
 
-func NewLog(v ...interface{}) {
-	newlog := fmt.Sprint(v...)
-	log.Println(newlog)
+func newLog(v ...interface{}) {
+	logStr := time.Now().Local().Format("Jan 2 15:04:05 - ") + fmt.Sprint(v...)
+	fmt.Println(logStr)
 	logsMutex.Lock()
-	logsQueue = append(logsQueue, newlog)
+	logsQueue = append(logsQueue, logStr)
 	logsMutex.Unlock()
 }

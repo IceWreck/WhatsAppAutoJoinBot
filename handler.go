@@ -35,7 +35,8 @@ type waHandler struct {
 }
 
 func (wh *waHandler) HandleError(err error) {
-	log.Println("error caught in handler:", err)
+	// log to stdout but not to the main logs cause these are expected errors
+	log.Println("unhandled message:", err)
 }
 
 // HandleTextMessage receives whatsapp text messages
@@ -66,7 +67,7 @@ func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 		return
 	}
 	groupSubject := getStringInBetween(string(webBody), `<meta property="og:title" content="`, `" />`)
-	NewLog("group subject is ", groupSubject)
+	newLog("group subject is ", groupSubject)
 
 	shouldJoin := false
 	for _, item := range whitelist {
@@ -79,10 +80,10 @@ func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 	// join group
 	if shouldJoin {
 
-		NewLog("invite code is", inviteCode)
+		newLog("invite code is", inviteCode)
 		jid, err := wh.wac.GroupAcceptInviteCode(inviteCode)
 		if err != nil {
-			NewLog("cant join group ", err, jid)
+			newLog("cant join group ", err, jid)
 			return
 		}
 	}

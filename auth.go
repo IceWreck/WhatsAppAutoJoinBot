@@ -19,7 +19,7 @@ func login(wac *whatsapp.Conn) error {
 		session, err = wac.RestoreWithSession(session)
 		// if restore works,
 		if err == nil {
-			NewLog("session restored, saving")
+			newLog("session restored, saving")
 			if err = writeSession(session); err != nil {
 				return fmt.Errorf("error saving session: %v", err)
 			}
@@ -28,13 +28,13 @@ func login(wac *whatsapp.Conn) error {
 	}
 
 	// if restore failed or if saved session doesnt exist, try new login
-	NewLog("saved session doesn't exist/work, will have to login again")
+	newLog("saved session doesn't exist/work, will have to login again")
 
 	qr := make(chan string)
 	go func() {
 		qcode := <-qr
-		NewLog("Latest Is", qcode)
-		SetState("qr", qcode)
+		newLog("Latest Is ", qcode)
+		setState("qr", qcode)
 	}()
 	session, err = wac.Login(qr)
 	if err != nil {

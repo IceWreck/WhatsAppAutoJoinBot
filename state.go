@@ -10,11 +10,11 @@ var globalState = map[string](string){}
 var stateMutex sync.Mutex
 var lastUpdated = time.Now()
 
-func GetState(key string) string {
+func getState(key string) string {
 	return globalState[key]
 }
 
-func SetState(key string, value string) {
+func setState(key string, value string) {
 	stateMutex.Lock()
 	globalState[key] = value
 	lastUpdated = time.Now()
