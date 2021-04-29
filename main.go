@@ -54,10 +54,16 @@ func main() {
 				if !wacon.GetLoggedIn() {
 					newLog("Logged Out, retry login")
 					setup()
-					// timer to check if relogin worked
+					// check if relogin worked
 					time.Sleep(2 * time.Minute)
 					if !wacon.GetLoggedIn() {
 						// send a notification about logout
+						// comment out if you dont want notifications
+
+						// _, _ = http.PostForm("https://hookmsg.example.com/hooks/matrix/script-reports", url.Values{
+						// 	"secret":  {"HOOKMSG-SECRET"},
+						// 	"content": {"**WhatsApp AutoJoin Bot:** Can't Login"},
+						// })
 					}
 				}
 			}
