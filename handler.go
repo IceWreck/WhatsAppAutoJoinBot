@@ -19,6 +19,18 @@ var whitelist = []string{
 	"worksheet",
 	"study",
 	"sessional",
+	"exam",
+	"midsem",
+	"endsem",
+	"semester",
+}
+
+// whitelist of topics which should be in title and should not be a subword
+var whitelist_word = []string{
+	"mst",
+	"est",
+	"ests",
+	"msts",
 }
 
 // regex for whatsapp invite link
@@ -74,6 +86,15 @@ func (wh *waHandler) HandleTextMessage(message whatsapp.TextMessage) {
 		if strings.Contains(strings.ToLower(groupSubject), item) {
 			shouldJoin = true
 			break
+		}
+	}
+
+	for _, word := range strings.Fields(groupSubject) {
+		for _, item := range whitelist_word {
+			if strings.ToLower(word) == item {
+				shouldJoin = true
+				break
+			}
 		}
 	}
 
