@@ -28,6 +28,7 @@ func main() {
 			panic(err)
 		}
 
+		wac.SetClientVersion(2, 2123, 7)
 		wac.AddHandler(&waHandler{wac, uint64(time.Now().Unix())})
 
 		// run this in background
